@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Position Size Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .output {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Position Size Calculator</h1>
+    <label for="balance">Account Balance ($):</label>
+    <input type="number" id="balance" placeholder="Enter account balance">
+
+    <label for="risk">Risk Percentage (%):</label>
+    <input type="number" id="risk" placeholder="Enter risk percentage">
+
+    <label for="stopLoss">Stop Loss (Pips):</label>
+    <input type="number" id="stopLoss" onkeyup="calculateLotSize()" placeholder="Enter stop loss in pips">
+    <label for="round">Round:</label>
+    <input type="number" id="round" onkeyup="roundLotSize(this.value)">
+
+    <button onclick="calculateLotSize()">Calculate Lot Size</button>
+
+    <div class="output">
+      <p>Lot Size: <span id="lotSizeResult"></span></p>
+    </div>
+  </div>
+
+  <script>
+    let lotSize;
+    function roundLotSize(val) {
+      const num = parseInt(val);
+      if (isNaN(num)) {
+        return;
+      }
+      document.getElementById('lotSizeResult').textContent = lotSize.toFixed(num);
+    }
+
+    // Function to calculate lot size
+    function calculateLotSize() {
+      // Get user inputs
+      const balance = parseFloat(document.getElementById('balance').value);
+      const riskPercentage = parseFloat(document.getElementById('risk').value);
+      const stopLossPips = parseFloat(document.getElementById('stopLoss').value);
+      const round = parseInt(document.getElementById('round').value);
+
+      // Validate inputs
+      if (isNaN(balance) || isNaN(riskPercentage) || isNaN(stopLossPips)) {
+        return;
+      }
+
+      // Calculate risk amount in dollars
+      const riskAmount = (balance * riskPercentage) / 100;
+
+      // Calculate lot size (initial assumption)
+      lotSize = (riskAmount / (stopLossPips * 10)); // Default pip value of $10
+
+
+      // Display the result
+      document.getElementById('lotSizeResult').textContent = lotSize.toFixed(round || 10);
+    }
+  </script>
+</body>
+
+</html>
